@@ -1,0 +1,28 @@
+{
+  "name": "spotify-prototype",
+  "version": "0.0.1",
+  "description": "",
+  "main": "pages/index.js",
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1",
+    "next": "^9.4.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/L-A/spotify-prototype.git"
+  },
+  "author": "Louis-André Labadie",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/L-A/spotify-prototype/issues"
+  },
+  "homepage": "https://github.com/L-A/spotify-prototype#readme"
+}
