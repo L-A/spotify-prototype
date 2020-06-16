@@ -1,16 +1,20 @@
-import { useRouter, useState } from "next/router";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import "isomorphic-fetch";
 
-import { refreshTokens } from "../helpers/spotifyAuthorization";
+import { refreshTokens, validToken } from "../helpers/spotifyTokens";
 
 export default () => {
   const { query } = useRouter();
   const authCode = query.code;
 
   useEffect(() => {
+    if (validToken()) {
+      window.location.replace("/");
+      return;
+    }
     if (authCode) {
-      refreshTokens(authCode);
+      refreshTokens(authCode, false).then((_) => window.location.replace("/"));
     }
   }, [authCode]);
 
