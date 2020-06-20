@@ -9,13 +9,20 @@ export const validToken = () => {
   return expires_at && expires_at > new Date().getTime();
 };
 
-export const useTokens = async () => {
+export const useToken = async () => {
   if (guardForServer()) return;
   const expires_at = getStoredItem("token_expiry");
+  const refresh_token = getStoredItem("refresh_token");
+  if (!expires_at) return false;
   if (expires_at > new Date().getTime()) {
     return getStoredItem("access_token");
   } else {
-    return await refreshTokens(getStoredItem("refresh_token"));
+    if (refresh_token) {
+      const newToken = await refreshTokens(getStoredItem("refresh_token"));
+      return newToken;
+    } else {
+      return false;
+    }
   }
 };
 
@@ -32,6 +39,7 @@ export const refreshTokens = async (code, refresh = true) => {
     let expires_at = new Date().getTime() + expires_in * 1000; // Expiry is given in seconds
     storeItem("access_token", access_token);
     storeItem("token_expiry", expires_at);
+    console.log("Token refreshed");
     return access_token;
   } else {
     console.log(jsonResult);

@@ -12,7 +12,7 @@ const parameters = encode({
   client_id: spotifyId,
   response_type: "code",
   redirect_uri: authorizationURL,
-  scope: "user-library-read streaming",
+  scope: "user-library-read streaming user-read-playback-state",
 });
 export const spotifyAuthorizationUrl = spotifyAuthorizeUrl + "?" + parameters;
 

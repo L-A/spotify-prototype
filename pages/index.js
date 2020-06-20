@@ -1,63 +1,92 @@
+import { StateProvider, useAppState } from "../helpers/state";
 import { spotifyAuthorizationUrl } from "../helpers/spotifyAuthorization";
-import { validToken, currentToken } from "../helpers/spotifyTokens";
+import { useToken } from "../helpers/spotifyTokens";
+import { getAllAlbums } from "../helpers/spotifyGetAlbums";
 import { useState, useEffect } from "react";
 
-const POC = () => {
-  const [ready, setReady] = useState(false);
-  const [albums, setAlbums] = useState(false);
+const App = () => {
+  const [state, dispatch] = useAppState();
+  const { appReady, albums, pickedAlbum } = state;
+
+  const [pastSelections, setPastSelections] = useState([]);
 
   const checkToken = () => {
-    const currentTokenValid = validToken();
-    setReady(currentTokenValid);
+    const asyncCheckToken = async () => {
+      const currentTokenValid = await useToken();
+      if (currentTokenValid) {
+        dispatch({ type: "Set app to ready" });
+      }
+    };
+    asyncCheckToken();
   };
 
-  const getAlbums = () => {
+  const initAlbums = () => {
     const asyncGetAlbums = async () => {
-      const albumsList = await fetch(
-        "https://api.spotify.com/v1/me/albums?limit=50",
-        {
-          headers: {
-            Authorization: currentToken(),
-          },
-        }
-      );
-      const albumsJSON = await albumsList.json();
-      console.log(albumsJSON);
-      setAlbums(albumsJSON.items);
+      const albums = await getAllAlbums();
+      dispatch({ type: "Set albums list", albums });
     };
     asyncGetAlbums();
   };
 
+  const pickAlbum = () => {
+    const limit = albums.length;
+    let position = Math.floor(Math.random() * limit);
+    dispatch({ type: "Set picked album", album: albums[position] });
+    setPastSelections(pastSelections.concat([pickedAlbum]));
+    console.log(pastSelections);
+  };
+
   useEffect(checkToken, []);
-  useEffect(getAlbums, []);
+  useEffect(initAlbums, []);
 
   return (
-    <div>
-      {!ready ? (
+    <>
+      {!appReady ? (
         <p>
           <a href={spotifyAuthorizationUrl}>Authorize me!</a>
         </p>
       ) : (
         <div>
           <p>App ready!</p>
-          {albums
-            ? albums.map((item) => (
-                <img src={item.album.images[1].url} key={item.album.id} />
-              ))
-            : false}
+          <p>
+            <button onClick={pickAlbum}>Pick album</button>
+          </p>
+          {pickedAlbum ? (
+            <>
+              <img src={pickedAlbum.covers[1].url} key={pickedAlbum.id} />
+              <h1>{pickedAlbum.name}</h1>
+              <h2>{pickedAlbum.artist}</h2>
+            </>
+          ) : (
+            false
+          )}
         </div>
       )}
       <style jsx>
         {`
+          :global(html) {
+            background-color: #111;
+            color: #ddd;
+          }
+
+          div {
+            font-family: sans-serif;
+            text-align: center;
+          }
+
           img {
             border-radius: 4px;
-            box-shadow: 0 4px 8px #aaa;
+            box-shadow: 0 4px 16px #000, 0 0 1px #ccc;
             margin: 8px;
           }
         `}
       </style>
-    </div>
+    </>
   );
 };
 
-export default POC;
+export default () => (
+  <StateProvider>
+    <App />
+  </StateProvider>
+);
