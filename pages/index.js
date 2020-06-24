@@ -2,13 +2,15 @@ import { StateProvider, useAppState } from "../helpers/state";
 import { spotifyAuthorizationUrl } from "../helpers/spotifyAuthorization";
 import { useToken } from "../helpers/spotifyTokens";
 import { getAllAlbums } from "../helpers/spotifyGetAlbums";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+
+import AlbumView from "../components/albumView";
+import ControlsView from "../components/controlsView";
 
 const App = () => {
   const [state, dispatch] = useAppState();
-  const { appReady, albums, pickedAlbum } = state;
-
-  const [pastSelections, setPastSelections] = useState([]);
+  const { appReady, albums, pickedAlbum, pickedIndex, lastPickedIndex } = state;
+  console.log(state);
 
   const checkToken = () => {
     const asyncCheckToken = async () => {
@@ -25,63 +27,62 @@ const App = () => {
       const albums = await getAllAlbums();
       dispatch({ type: "Set albums list", albums });
     };
-    asyncGetAlbums();
+    if (albums.length == 0) {
+      asyncGetAlbums();
+    }
   };
 
-  const pickAlbum = () => {
-    const limit = albums.length;
-    let position = Math.floor(Math.random() * limit);
-    dispatch({ type: "Set picked album", album: albums[position] });
-    setPastSelections(pastSelections.concat([pickedAlbum]));
-    console.log(pastSelections);
+  const forwards = () => {
+    dispatch({ type: "Select album forwards" });
+  };
+
+  const backwards = () => {
+    dispatch({ type: "Select album backwards" });
   };
 
   useEffect(checkToken, []);
   useEffect(initAlbums, []);
+  useEffect(forwards, [albums]);
 
   return (
-    <>
+    <div className="root">
       {!appReady ? (
         <p>
           <a href={spotifyAuthorizationUrl}>Authorize me!</a>
         </p>
       ) : (
-        <div>
-          <p>App ready!</p>
-          <p>
-            <button onClick={pickAlbum}>Pick album</button>
-          </p>
-          {pickedAlbum ? (
-            <>
-              <img src={pickedAlbum.covers[1].url} key={pickedAlbum.id} />
-              <h1>{pickedAlbum.name}</h1>
-              <h2>{pickedAlbum.artist}</h2>
-            </>
-          ) : (
-            false
-          )}
-        </div>
+        <>
+          <AlbumView {...pickedAlbum} />
+          <ControlsView
+            {...{ forwards, backwards }}
+            backwardsDisabled={pickedIndex <= 0}
+            forwardIsShuffle={pickedIndex == lastPickedIndex}
+          />
+        </>
       )}
       <style jsx>
         {`
           :global(html) {
-            background-color: #111;
+            background-color: #252525;
             color: #ddd;
           }
 
-          div {
-            font-family: sans-serif;
-            text-align: center;
+          :global(body, html, #__next) {
+            height: 100%;
+            margin: 0;
           }
 
-          img {
-            border-radius: 4px;
-            box-shadow: 0 4px 16px #000, 0 0 1px #ccc;
-            margin: 8px;
+          .root {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            font-family: sans-serif;
+            height: 100%;
           }
         `}
       </style>
-    </>
+    </div>
   );
 };
 

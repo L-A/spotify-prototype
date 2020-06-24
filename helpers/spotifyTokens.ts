@@ -1,24 +1,33 @@
 import { storeItem, getStoredItem } from "./storage";
 
+type TokenJson = {
+  refresh_token: string;
+  access_token: string;
+  expires_in: number;
+};
+
+// TODO get token requests to auto-refresh when needed
+
 export const currentToken = () => {
   return "Bearer " + getStoredItem("access_token");
 };
 
 export const validToken = () => {
-  const expires_at = getStoredItem("token_expiry");
+  const expires_at: number = getStoredItem("token_expiry");
   return expires_at && expires_at > new Date().getTime();
 };
 
 export const useToken = async () => {
   if (guardForServer()) return;
-  const expires_at = getStoredItem("token_expiry");
-  const refresh_token = getStoredItem("refresh_token");
+  const expires_at: number = getStoredItem("token_expiry");
+  const refresh_token: string = getStoredItem("refresh_token");
+  console.log(new Date(expires_at));
   if (!expires_at) return false;
   if (expires_at > new Date().getTime()) {
     return getStoredItem("access_token");
   } else {
     if (refresh_token) {
-      const newToken = await refreshTokens(getStoredItem("refresh_token"));
+      const newToken = await refreshTokens(refresh_token);
       return newToken;
     } else {
       return false;
@@ -27,12 +36,12 @@ export const useToken = async () => {
 };
 
 // Token retrieval method
-export const refreshTokens = async (code, refresh = true) => {
-  const arg = refresh ? "refreshToken=" : "authCode=";
+export const refreshTokens = async (code: string, refresh: boolean = true) => {
+  const arg: string = refresh ? "refreshToken=" : "authCode=";
   const tokenRequest = await fetch(
     "http://localhost:3000/api/getTokens?" + arg + code
   );
-  const jsonResult = await tokenRequest.json();
+  const jsonResult: TokenJson = await tokenRequest.json();
   const { refresh_token, access_token, expires_in } = jsonResult;
   if (refresh_token) storeItem("refresh_token", refresh_token);
   if (access_token && expires_in) {

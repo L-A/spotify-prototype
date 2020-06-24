@@ -4,7 +4,6 @@ const authorizationURL = "http://localhost:3000/authorized";
 import {
   spotifyAuthorizationString,
   spotifyTokenUrl,
-  refreshTokens,
 } from "../../helpers/spotifyAuthorization";
 
 export default async (req, res) => {

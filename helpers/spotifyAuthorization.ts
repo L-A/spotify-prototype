@@ -12,10 +12,11 @@ const parameters = encode({
   client_id: spotifyId,
   response_type: "code",
   redirect_uri: authorizationURL,
-  scope: "user-library-read streaming user-read-playback-state",
+  scope:
+    "user-library-read streaming user-read-playback-state user-modify-playback-state",
 });
 export const spotifyAuthorizationUrl = spotifyAuthorizeUrl + "?" + parameters;
 
 // Authorization strings for token exchanges
-var buffer = Buffer(spotifyId + ":" + spotifySecret);
+var buffer = Buffer.from(spotifyId + ":" + spotifySecret);
 export const spotifyAuthorizationString = buffer.toString("base64");

@@ -25,6 +25,6 @@ const getAlbumsAtOffset = async (offset = 0) => {
     }
   );
   const reply = await albumsList.json();
-  if (reply.error) throw ("Error fetching albums", reply);
+  if (reply.error) throw new Error("Error fetching albums");
   return reply;
 };

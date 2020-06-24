@@ -1,11 +1,8 @@
 import { createContext, useContext, useReducer, ReactNode } from "react";
 
-// Duct tape state management, how u doin
-
 // Types
 type Action =
   | { type: "Set albums list"; albums: Album[] }
-  | { type: "Set picked album"; album: Album }
   | { type: "Select album forwards" }
   | { type: "Select album backwards" }
   | { type: "Set app to ready" };
@@ -18,23 +15,76 @@ type Album = {
 type State = {
   appReady: boolean;
   albums: Album[];
+  selections: string[];
+  pickedIndex: number;
+  lastPickedIndex: number;
   pickedAlbum: Album | false;
 };
 type Dispatch = (action: Action) => void;
 type ProviderProps = { children: ReactNode };
 
-const initialState: State = { appReady: false, albums: [], pickedAlbum: false };
+const initialState: State = {
+  appReady: false,
+  albums: [],
+  selections: [],
+  pickedAlbum: false,
+  pickedIndex: -1,
+  lastPickedIndex: -1,
+};
 
 const StateContext = createContext<State | undefined>(undefined);
 const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
+    // Duct tape state management, how u doin
+    // This is a small app. When needed, there's logic in here:
     case "Set albums list": {
-      return { ...state, albums: action.albums };
+      const shuffledAlbums = action.albums
+        .map((a) => a.id)
+        .sort(() => Math.random() - 0.5);
+      return { ...state, albums: action.albums, selections: shuffledAlbums };
     }
+
     case "Set app to ready": {
       return { ...state, appReady: true };
+    }
+
+    case "Select album forwards": {
+      if (state.albums.length <= 0) return { ...state, pickedIndex: -1 };
+      let pickedIndex = (state.pickedIndex + 1) % state.selections.length;
+      let lastPickedIndex =
+        pickedIndex > state.lastPickedIndex
+          ? pickedIndex
+          : state.lastPickedIndex;
+      let pickedAlbum = state.pickedAlbum || false;
+      if (state.albums[pickedIndex]) {
+        pickedAlbum = state.albums.find(
+          (album) => album.id == state.selections[pickedIndex]
+        );
+      }
+      return {
+        ...state,
+        lastPickedIndex,
+        pickedAlbum,
+        pickedIndex,
+      };
+    }
+
+    case "Select album backwards": {
+      if (state.albums.length <= 0) return { ...state, pickedIndex: -1 };
+      let pickedIndex = Math.max(0, state.pickedIndex - 1);
+      let pickedAlbum = state.pickedAlbum || false;
+      if (state.albums[pickedIndex]) {
+        pickedAlbum = state.albums.find(
+          (album) => album.id == state.selections[pickedIndex]
+        );
+      }
+      return {
+        ...state,
+        pickedAlbum,
+        pickedIndex,
+      };
     }
     default: {
       return { ...state };
@@ -59,20 +109,3 @@ export const useAppState = () => {
   }
   return [state, dispatch];
 };
-
-/*
-Reference state structure
-
-{
-  pickedAlbum: 
-  totalAlbums: {
-    [{
-      name,
-      covers,
-      id,
-      artists
-    }]
-  }
-}
-
-*/
