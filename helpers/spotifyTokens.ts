@@ -6,29 +6,27 @@ type TokenJson = {
   expires_in: number;
 };
 
-// TODO get token requests to auto-refresh when needed
+const formattedTokenPrefix = "Bearer ";
 
-export const currentToken = () => {
-  return "Bearer " + getStoredItem("access_token");
-};
+// TODO get token requests to auto-refresh when needed
 
 export const validToken = () => {
   const expires_at: number = getStoredItem("token_expiry");
   return expires_at && expires_at > new Date().getTime();
 };
 
-export const useToken = async () => {
+export const useToken = async (formatted: false) => {
+  const prefix = formatted ? formattedTokenPrefix : "";
   if (guardForServer()) return;
   const expires_at: number = getStoredItem("token_expiry");
   const refresh_token: string = getStoredItem("refresh_token");
-  console.log(new Date(expires_at));
   if (!expires_at) return false;
   if (expires_at > new Date().getTime()) {
-    return getStoredItem("access_token");
+    return prefix + getStoredItem("access_token");
   } else {
     if (refresh_token) {
       const newToken = await refreshTokens(refresh_token);
-      return newToken;
+      return prefix + newToken;
     } else {
       return false;
     }

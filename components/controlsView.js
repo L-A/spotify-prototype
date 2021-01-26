@@ -1,4 +1,4 @@
-export default ({
+const Controls = ({
   forwards,
   backwards,
   backwardsDisabled,
@@ -18,10 +18,7 @@ export default ({
     </p>
     <style jsx>{`
       .controls {
-        border-top: solid 1px #444;
-        margin-top: auto;
-        padding: 32px;
-        align-self: stretch;
+        padding: 2vh;
       }
 
       button {
@@ -68,3 +65,5 @@ export default ({
     `}</style>
   </div>
 );
+
+export default Controls;

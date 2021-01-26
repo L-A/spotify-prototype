@@ -11,6 +11,7 @@ type Album = {
   covers: object[];
   id: string;
   artist: string;
+  uri: string;
 };
 type State = {
   appReady: boolean;
@@ -19,6 +20,7 @@ type State = {
   pickedIndex: number;
   lastPickedIndex: number;
   pickedAlbum: Album | false;
+  nextPickedAlbum: Album | false;
 };
 type Dispatch = (action: Action) => void;
 type ProviderProps = { children: ReactNode };
@@ -28,6 +30,7 @@ const initialState: State = {
   albums: [],
   selections: [],
   pickedAlbum: false,
+  nextPickedAlbum: false,
   pickedIndex: -1,
   lastPickedIndex: -1,
 };
@@ -36,6 +39,7 @@ const StateContext = createContext<State | undefined>(undefined);
 const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
 const reducer = (state: State, action: Action) => {
+  console.log("Action dispatch:", action.type);
   switch (action.type) {
     // Duct tape state management, how u doin
     // This is a small app. When needed, there's logic in here:
@@ -58,15 +62,22 @@ const reducer = (state: State, action: Action) => {
           ? pickedIndex
           : state.lastPickedIndex;
       let pickedAlbum = state.pickedAlbum || false;
+      let nextPickedAlbum = state.nextPickedAlbum || false;
       if (state.albums[pickedIndex]) {
         pickedAlbum = state.albums.find(
           (album) => album.id == state.selections[pickedIndex]
+        );
+      }
+      if (state.albums[pickedIndex + 1]) {
+        nextPickedAlbum = state.albums.find(
+          (album) => album.id == state.selections[pickedIndex + 1]
         );
       }
       return {
         ...state,
         lastPickedIndex,
         pickedAlbum,
+        nextPickedAlbum,
         pickedIndex,
       };
     }

@@ -1,5 +1,21 @@
 import { useToken } from "../helpers/spotifyTokens";
 
+export const playAlbum = async (uri) => {
+  const playRequest = await fetch("https://api.spotify.com/v1/me/player/play", {
+    method: "PUT",
+    headers: {
+      Authorization: await useToken(true),
+    },
+    body: JSON.stringify({
+      context_uri: uri,
+    }),
+  });
+
+  console.log(await playRequest.text());
+};
+
+// Sources:
+
 export const getAllAlbums = async (offset = 0, albums = []) => {
   const { items, next } = await getAlbumsAtOffset(offset);
   if (next !== null) {
