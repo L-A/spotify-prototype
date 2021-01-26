@@ -6,6 +6,7 @@ import { useToken } from "../helpers/spotifyTokens";
 import { getAllAlbums } from "../helpers/spotifyGetAlbums";
 import { playAlbum } from "../helpers/spotifyPlayAlbum";
 
+import Layout from "../components/layout";
 import AlbumView from "../components/albumView";
 import ControlsView from "../components/controlsView";
 
@@ -19,7 +20,9 @@ const App = () => {
     pickedIndex,
     lastPickedIndex,
   } = state;
-  console.log(state);
+  if (process && process.env.NODE_ENV == "development") {
+    console.log("State update:", state);
+  }
 
   const checkToken = () => {
     const asyncCheckToken = async () => {
@@ -64,49 +67,51 @@ const App = () => {
   }
 
   return (
-    <div className="root">
-      {!appReady ? (
-        <p>
-          <a href={spotifyAuthorizationUrl}>Authorize me!</a>
-        </p>
-      ) : (
-        <>
-          <AlbumView {...pickedAlbum} play={play} />
-          <ControlsView
-            {...{ forwards, backwards }}
-            backwardsDisabled={pickedIndex <= 0}
-            forwardIsShuffle={pickedIndex == lastPickedIndex}
-          />
-        </>
-      )}
-      <style jsx>
-        {`
-          :global(html) {
-            background-color: #252525;
-            color: #ddd;
-          }
+    <Layout>
+      <div className="root">
+        {!appReady ? (
+          <p>
+            <a href={spotifyAuthorizationUrl}>Authorize me!</a>
+          </p>
+        ) : (
+          <>
+            <AlbumView {...pickedAlbum} play={play} />
+            <ControlsView
+              {...{ forwards, backwards }}
+              backwardsDisabled={pickedIndex <= 0}
+              forwardIsShuffle={pickedIndex == lastPickedIndex}
+            />
+          </>
+        )}
+        <style jsx>
+          {`
+            :global(html) {
+              background-color: #252525;
+              color: #ddd;
+            }
 
-          :global(body, html, #__next) {
-            height: 100%;
-            margin: 0;
-          }
+            :global(body, html, #__next) {
+              height: 100%;
+              margin: 0;
+            }
 
-          .root {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-family: sans-serif;
-            height: 100%;
-          }
+            .root {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              text-align: center;
+              font-family: sans-serif;
+              height: 100%;
+            }
 
-          a {
-            color: #ddd;
-          }
-        `}
-      </style>
-    </div>
+            a {
+              color: #ddd;
+            }
+          `}
+        </style>
+      </div>
+    </Layout>
   );
 };
 
