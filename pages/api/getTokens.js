@@ -1,5 +1,4 @@
 import "isomorphic-fetch";
-const authorizationURL = "http://localhost:3000/authorized";
 
 import {
   spotifyAuthorizationString,
@@ -7,6 +6,7 @@ import {
 } from "../../helpers/spotifyAuthorization";
 
 export default async (req, res) => {
+  const authorizationURL = `http://${req.headers.host}/authorized`;
   const { authCode, refreshToken } = req.query;
   const tokensRequestData = {
     grant_type: authCode ? "authorization_code" : "refresh_token",

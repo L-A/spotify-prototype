@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { StateProvider, useAppState } from "../helpers/state";
-import { spotifyAuthorizationUrl } from "../helpers/spotifyAuthorization";
+import { getSpotifyAuthorizationUrl } from "../helpers/spotifyAuthorization";
 import { useToken } from "../helpers/spotifyTokens";
 import { getAllAlbums } from "../helpers/spotifyGetAlbums";
 import { playAlbum } from "../helpers/spotifyPlayAlbum";
@@ -10,7 +10,7 @@ import Layout from "../components/layout";
 import AlbumView from "../components/albumView";
 import ControlsView from "../components/controlsView";
 
-const App = () => {
+const App = ({ spotifyAuthorizationUrl }) => {
   const [state, dispatch] = useAppState();
   const {
     appReady,
@@ -115,10 +115,17 @@ const App = () => {
   );
 };
 
-const StatefulApp = () => (
+const StatefulApp = (props) => (
   <StateProvider>
-    <App />
+    <App {...props} />
   </StateProvider>
 );
+
+StatefulApp.getInitialProps = async ({ req }) => {
+  const origin = req ? "http://" + req.headers.host : window.location.origin;
+  return {
+    spotifyAuthorizationUrl: getSpotifyAuthorizationUrl(origin),
+  };
+};
 
 export default StatefulApp;
