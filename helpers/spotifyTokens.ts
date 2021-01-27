@@ -25,11 +25,7 @@ export const useToken = async (formatted: false) => {
     return prefix + getStoredItem("access_token");
   } else {
     if (refresh_token) {
-      const newToken = await refreshTokens(
-        refresh_token,
-        true,
-        window.location.origin
-      );
+      const newToken = await refreshTokens(refresh_token, true);
       return prefix + newToken;
     } else {
       return false;
@@ -38,13 +34,11 @@ export const useToken = async (formatted: false) => {
 };
 
 // Token retrieval method
-export const refreshTokens = async (
-  code: string,
-  refresh: boolean = true,
-  origin: string
-) => {
+export const refreshTokens = async (code: string, refresh: boolean = true) => {
   const arg: string = refresh ? "refreshToken=" : "authCode=";
-  const tokenRequest = await fetch(origin + "/api/getTokens?" + arg + code);
+  const tokenRequest = await fetch(
+    window.location.origin + "/api/getTokens?" + arg + code
+  );
   const jsonResult: TokenJson = await tokenRequest.json();
   const { refresh_token, access_token, expires_in } = jsonResult;
   if (refresh_token) storeItem("refresh_token", refresh_token);
