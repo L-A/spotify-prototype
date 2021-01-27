@@ -1,5 +1,4 @@
 import { storeItem, getStoredItem } from "./storage";
-import GetOrigin from "./getOrigin";
 
 type TokenJson = {
   refresh_token: string;
@@ -38,7 +37,7 @@ export const useToken = async (formatted: false) => {
 export const refreshTokens = async (code: string, refresh: boolean = true) => {
   const arg: string = refresh ? "refreshToken=" : "authCode=";
   const tokenRequest = await fetch(
-    GetOrigin() + "/api/getTokens?" + arg + code
+    window.location.origin + "/api/getTokens?" + arg + code
   );
   const jsonResult: TokenJson = await tokenRequest.json();
   const { refresh_token, access_token, expires_in } = jsonResult;

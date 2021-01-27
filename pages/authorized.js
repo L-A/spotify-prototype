@@ -4,7 +4,7 @@ import "isomorphic-fetch";
 
 import { refreshTokens, validToken } from "../helpers/spotifyTokens";
 
-const Authorized = () => {
+const Authorized = ({ origin }) => {
   const { query } = useRouter();
   console.log("Query:", query);
   const authCode = query.code;
@@ -15,7 +15,9 @@ const Authorized = () => {
       return;
     }
     if (authCode) {
-      refreshTokens(authCode, false).then((_) => window.location.replace("/"));
+      refreshTokens(authCode, false, origin).then((_) =>
+        window.location.replace("/")
+      );
     }
   }, [authCode]);
 
@@ -24,6 +26,13 @@ const Authorized = () => {
       <h1>Let's get you connected!</h1>
     </div>
   );
+};
+
+Authorized.getInitialProps = async ({ req }) => {
+  const origin = req ? "http://" + req.headers.host : window.location.origin;
+  return {
+    origin,
+  };
 };
 
 export default Authorized;

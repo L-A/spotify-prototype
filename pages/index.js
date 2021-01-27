@@ -10,7 +10,7 @@ import Layout from "../components/layout";
 import AlbumView from "../components/albumView";
 import ControlsView from "../components/controlsView";
 
-const App = () => {
+const App = ({ spotifyAuthorizationUrl }) => {
   const [state, dispatch] = useAppState();
   const {
     appReady,
@@ -71,7 +71,7 @@ const App = () => {
       <div className="root">
         {!appReady ? (
           <p>
-            <a href={getSpotifyAuthorizationUrl()}>Authorize me!</a>
+            <a href={spotifyAuthorizationUrl}>Authorize me!</a>
           </p>
         ) : (
           <>
@@ -115,10 +115,17 @@ const App = () => {
   );
 };
 
-const StatefulApp = () => (
+const StatefulApp = (props) => (
   <StateProvider>
-    <App />
+    <App {...props} />
   </StateProvider>
 );
+
+StatefulApp.getInitialProps = async ({ req }) => {
+  const origin = req ? "http://" + req.headers.host : window.location.origin;
+  return {
+    spotifyAuthorizationUrl: getSpotifyAuthorizationUrl(origin),
+  };
+};
 
 export default StatefulApp;
