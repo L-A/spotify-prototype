@@ -4,10 +4,9 @@ import { StateProvider, useAppState } from "../helpers/state";
 import { getSpotifyAuthorizationUrl } from "../helpers/spotifyAuthorization";
 import { useToken } from "../helpers/spotifyTokens";
 import { getAllAlbums } from "../helpers/spotifyGetAlbums";
-import { playAlbum } from "../helpers/spotifyPlayAlbum";
 
 import Layout from "../components/layout";
-import AlbumView from "../components/albumView";
+import Albums from "../components/albumsView";
 import ControlsView from "../components/controlsView";
 
 const App = ({ spotifyAuthorizationUrl }) => {
@@ -68,49 +67,34 @@ const App = ({ spotifyAuthorizationUrl }) => {
 
   return (
     <Layout>
-      <div className="root">
-        {!appReady ? (
-          <p>
-            <a href={spotifyAuthorizationUrl}>Authorize me!</a>
-          </p>
-        ) : (
-          <>
-            <AlbumView {...pickedAlbum} play={play} />
-            <ControlsView
-              {...{ forwards, backwards }}
-              backwardsDisabled={pickedIndex <= 0}
-              forwardIsShuffle={pickedIndex == lastPickedIndex}
-            />
-          </>
-        )}
-        <style jsx>
-          {`
-            :global(html) {
-              background-color: #252525;
-              color: #ddd;
-            }
+      {!appReady ? (
+        <p>
+          <a className="authorize-button" href={spotifyAuthorizationUrl}>
+            Authorize me!
+          </a>
+        </p>
+      ) : (
+        <>
+          <Albums />
+          <ControlsView
+            {...{ forwards, backwards }}
+            backwardsDisabled={pickedIndex <= 0}
+            forwardIsShuffle={pickedIndex == lastPickedIndex}
+          />
+        </>
+      )}
+      <style jsx>{`
+        .authorize-button {
+          border-radius: 12px;
+          background: #333;
+          padding: 14px 20px 12px;
+          text-decoration: none;
+        }
 
-            :global(body, html, #__next) {
-              height: 100%;
-              margin: 0;
-            }
-
-            .root {
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-              text-align: center;
-              font-family: sans-serif;
-              height: 100%;
-            }
-
-            a {
-              color: #ddd;
-            }
-          `}
-        </style>
-      </div>
+        .authorize-button:hover {
+          background: #444;
+        }
+      `}</style>
     </Layout>
   );
 };

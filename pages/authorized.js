@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import "isomorphic-fetch";
 
 import { refreshTokens, validToken } from "../helpers/spotifyTokens";
+import Layout from "../components/layout";
 
 const Authorized = ({ origin }) => {
   const { query } = useRouter();
@@ -22,9 +23,9 @@ const Authorized = ({ origin }) => {
   }, [authCode]);
 
   return (
-    <div>
+    <Layout>
       <h1>Let's get you connected!</h1>
-    </div>
+    </Layout>
   );
 };
 
