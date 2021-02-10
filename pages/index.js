@@ -7,6 +7,7 @@ import { getAllAlbums } from "../helpers/spotifyGetAlbums";
 
 import Layout from "../components/layout";
 import Albums from "../components/albumsView";
+import AlbumInfo from "../components/albumInfo";
 import ControlsView from "../components/controlsView";
 
 const App = ({ spotifyAuthorizationUrl }) => {
@@ -53,10 +54,6 @@ const App = ({ spotifyAuthorizationUrl }) => {
     dispatch({ type: "Select album backwards" });
   };
 
-  const play = () => {
-    playAlbum(pickedAlbum.uri);
-  };
-
   useEffect(checkToken, [appReady]);
   useEffect(initAlbums, [appReady]);
   useEffect(forwards, [albums]);
@@ -76,6 +73,7 @@ const App = ({ spotifyAuthorizationUrl }) => {
       ) : (
         <>
           <Albums />
+          <AlbumInfo {...pickedAlbum} />
           <ControlsView
             {...{ forwards, backwards }}
             backwardsDisabled={pickedIndex <= 0}

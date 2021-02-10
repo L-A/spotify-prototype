@@ -3,24 +3,29 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { useAppState } from "../helpers/state";
 import AlbumView from "./albumView";
 
+const numberOfAlbums = 9;
+
 const Albums = () => {
   const [{ selections, pickedIndex, pickedAlbum, albums }] = useAppState();
   let filteredAlbums = selections
     .slice(0, pickedIndex + 1)
-    .filter((_, i) => pickedIndex - i <= 4 && i <= pickedIndex)
+    .filter((_, i) => pickedIndex - i <= numberOfAlbums - 1 && i <= pickedIndex)
     .map((id) => albums.find((album) => album.id == id));
 
-  console.log(filteredAlbums.length, pickedIndex);
   return (
     <div className="albums-container">
       <TransitionGroup className="albums">
         {filteredAlbums.map((album, i) => {
+          const position = filteredAlbums.length - i;
           return (
-            <CSSTransition key={album.id} timeout={300}>
+            <CSSTransition key={album.id} timeout={1000}>
               <AlbumView
                 {...album}
+                first={position == 1}
+                last={position == filteredAlbums.length}
+                fraction={1 / numberOfAlbums}
                 selected={pickedAlbum.id == album.id}
-                position={i}
+                position={filteredAlbums.length - i}
               />
             </CSSTransition>
           );
@@ -31,7 +36,9 @@ const Albums = () => {
           display: flex;
           flex-direction: row;
           height: 200px;
+          width: 200px;
           align-items: flex-end;
+          position: relative;
         }
       `}</style>
     </div>

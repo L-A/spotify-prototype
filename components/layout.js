@@ -11,6 +11,7 @@ const Layout = ({ children }) => {
         {`
           :global(html) {
             background-color: #252525;
+            background: radial-gradient(#252525, #000);
             color: #ddd;
           }
 

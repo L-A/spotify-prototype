@@ -1,20 +1,52 @@
+import { useState, useEffect } from "react";
 import { playAlbum } from "../helpers/spotifyPlayAlbum";
-const AlbumView = ({ covers, id, uri, selected, position }) => {
+
+const rotationRange = 20;
+const initialOffset = 30;
+
+const AlbumView = ({
+  covers,
+  id,
+  uri,
+  selected,
+  position,
+  first,
+  last,
+  fraction,
+}) => {
   const play = () => playAlbum(uri);
-  const imageSize = selected ? 200 : 120;
-  const offset = 4 - position;
+
+  const [rotation] = useState(
+    Math.random() * rotationRange - rotationRange / 2
+  );
+  const xOffset = (position - 1) * -10;
+  const yOffset = (position - 1) * 5;
+
   return (
-    <div className="album-view">
-      <a className="clickable-album" onClick={play}>
+    <div className={"album-view " + (first ? "first" : last ? "last" : "")}>
+      <a className="clickable-album" onClick={first ? play : null}>
         <img src={covers ? covers[1].url : ""} key={id} />
       </a>
 
       <style jsx>{`
+        .album-view {
+          text-align: center;
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          justify-content: center;
+          position: absolute;
+          width: 100%;
+          transform: translateX(${xOffset}px) translateY(${yOffset}px)
+            rotate(${rotation}deg);
+          background-color: #252525;
+          transition: opacity 0.3s, transform 0.3s ease-out;
+        }
+
         .clickable-album {
           background-color: #111;
           border-radius: 3px;
           display: block;
-          margin: 0 ${-offset * 10}px 0 0;
           position: relative;
           overflow: hidden;
           box-shadow: 0 8px 16px rgba(0, 0, 0, 0.9),
@@ -26,20 +58,12 @@ const AlbumView = ({ covers, id, uri, selected, position }) => {
           opacity: 1;
         }
 
-        .clickable-album:hover {
+        .first .clickable-album:hover {
           transform: scale(1.02);
         }
 
-        .clickable-album:active {
+        .first .clickable-album:active {
           transform: scale(0.99);
-        }
-
-        .album-view {
-          text-align: center;
-          display: flex;
-          align-items: center;
-          flex-direction: column;
-          justify-content: center;
         }
 
         .album {
@@ -66,22 +90,61 @@ const AlbumView = ({ covers, id, uri, selected, position }) => {
         img {
           border-radius: 3px;
           margin: 0;
-          width: ${imageSize}px;
-          max-width: 20vw;
+          width: 100%;
           display: block;
           transition: width 0.3s ease-out;
+          opacity: ${1 - (position - 1) * fraction};
+          transition: opacity 0.3s;
         }
 
-        .enter img {
+        .enter {
+          opacity: 0;
+          transform: translateX(${xOffset}px) translateY(${yOffset}px)
+            rotate(${rotation}deg);
         }
 
-        .enter-active img {
+        .enter-active {
+          opacity: 1;
+          transform: translateX(${xOffset}px) translateY(${yOffset}px)
+            rotate(${rotation}deg);
+          transition: opacity 0.3s, transform 0.3s;
         }
 
-        .exit img {
+        .exit {
+          opacity: 0;
+          transform: translateX(${xOffset}px) translateY(${yOffset}px)
+            rotate(${rotation}deg);
         }
 
-        .exit-active img {
+        .exit-active {
+          opacity: 0;
+          transform: translateX(${xOffset}px) translateY(${yOffset}px)
+            rotate(${rotation}deg);
+          transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .first.enter {
+          opacity: 0;
+          transform: translateX(${xOffset + initialOffset}px)
+            translateY(${yOffset + 10}px) rotate(${rotation * 2}deg);
+        }
+
+        .first.enter-active {
+          opacity: 1;
+          transform: translateX(${xOffset}px) rotate(${rotation}deg);
+          transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .first.exit {
+          opacity: 1;
+          transform: translateX(${xOffset}px) rotate(${rotation}deg);
+          transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .first.exit-active {
+          opacity: 0;
+          transform: translateX(${xOffset + initialOffset}px)
+            translateY(${yOffset + 10}px) rotate(${rotation * 2}deg);
         }
       `}</style>
     </div>
