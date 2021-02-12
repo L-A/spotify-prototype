@@ -26,7 +26,11 @@ export const useToken = async (formatted: false) => {
   } else {
     if (refresh_token) {
       const newToken = await refreshTokens(refresh_token, true);
-      return prefix + newToken;
+      if (newToken) {
+        // Must return false if the refresh token exists but is revoked.
+        return prefix + newToken;
+      }
+      return false;
     } else {
       return false;
     }
