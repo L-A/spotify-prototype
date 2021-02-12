@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
         <title>Browse your albums</title>
         <meta
           name="description"
-          content="A simple app to browse your Spotify albums like you would browse a record crate."
+          content="Browse your Spotify albums like you would browse a record crate."
         />
         <link rel="icon" href="/favicon.png" />
         <meta property="og:type" content="website" />
