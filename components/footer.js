@@ -60,11 +60,12 @@ const Footer = () => {
             margin: 0;
             display: flex;
             justify-content: flex-start;
+            align-items: center;
           }
 
           img {
             vertical-align: middle;
-            margin-bottom: -2px;
+            margin: -2px 0 -4px;
             opacity: 1;
             transition: opacity 0.3s ease-out;
           }
@@ -75,9 +76,10 @@ const Footer = () => {
 
           .rightmost-box {
             border-left: solid 1px #333;
-            padding: 8px 32px;
+            padding: 4px 32px;
             margin: 0 0 0 auto;
             display: flex;
+            align-items: center;
           }
 
           .smol-credit {
