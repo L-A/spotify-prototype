@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer, ReactNode } from "react";
+import { shuffleArray } from "../helpers/shuffleArray";
 
 // Types
 type Action =
@@ -44,10 +45,7 @@ const DispatchContext = createContext<Dispatch | undefined>(undefined);
 const reducer = (state: State, action: Action) => {
   console.log("Action dispatch:", action.type);
   switch (action.type) {
-
     // Duct tape state management, how u doin
-    // This is very readable, tho
-    // This is a small app. When needed, logic is right in here:
 
     case "Set app to ready": {
       return { ...state, appReady: true, needsAuth: false };
@@ -58,9 +56,8 @@ const reducer = (state: State, action: Action) => {
     }
 
     case "Set albums list": {
-      const shuffledAlbums = action.albums
-        .map((a) => a.id)
-        .sort(() => Math.random() - 0.5);
+      const shuffledAlbums = shuffleArray(action.albums.map((a) => a.id));
+      console.log(shuffledAlbums);
       return { ...state, albums: action.albums, selections: shuffledAlbums };
     }
 
