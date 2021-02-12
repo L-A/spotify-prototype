@@ -30,6 +30,7 @@ const Controls = ({
         height: 50px;
         width: 50px;
         margin: 0 16px;
+        touch-action: manipulation;
       }
 
       button:hover {

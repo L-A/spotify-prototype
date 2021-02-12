@@ -59,6 +59,7 @@ const AlbumView = ({
             box-shadow 0.6s ease-out;
           z-index: ${selected ? 2 : 1};
           opacity: 1;
+          touch-action: manipulation;
         }
 
         .first .clickable-album:hover {

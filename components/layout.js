@@ -21,10 +21,6 @@ const Layout = ({ children }) => {
           content="A simple app to browse your Spotify albums like you would browse a record crate."
         />
         <link rel="icon" href="/favicon.png" />
-        <meta
-          name="viewport"
-          content="initial-scale=1.0, width=device-width, user-scalable=no"
-        />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://albums.lal.fyi/" />
         <meta property="og:title" content="Browse your albums" />
