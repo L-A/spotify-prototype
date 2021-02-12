@@ -1,17 +1,6 @@
 import Head from "next/head";
 
 const Layout = ({ children }) => {
-  if (typeof window !== "undefined") {
-    window.goatcounter = {
-      referrer: function () {
-        return null;
-      },
-      path: function () {
-        return "albums.lal.fyi";
-      },
-    };
-  }
-
   return (
     <div className="root">
       <Head>
@@ -75,6 +64,20 @@ const Layout = ({ children }) => {
           }
         `}
       </style>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+          window.goatcounter = {
+            referrer: function () {
+              return null;
+            },
+            path: function () {
+              return "albums.lal.fyi";
+            },
+          };
+        `,
+        }}
+      />
       <script
         data-goatcounter="https://lal.goatcounter.com/count"
         async
