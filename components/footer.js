@@ -29,7 +29,9 @@ const Footer = () => {
       <div className="left-box">
         <p>
           <img
-            src="/icn-sound.svg"
+            src="/icn-sound@3x.png"
+            width="27"
+            height="24"
             className={devices.length == 0 ? "inactive" : null}
           />{" "}
           {sleeping
