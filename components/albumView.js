@@ -128,7 +128,7 @@ const AlbumView = ({
 
         .first.enter {
           opacity: 0;
-          transform: translateX(${xOffset + initialOffset}px) scaleX(0)
+          transform: translateX(${xOffset + initialOffset}px)
             translateY(${yOffset + 10}px) rotate(${rotation * 2}deg);
         }
 
