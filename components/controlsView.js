@@ -33,7 +33,8 @@ const Controls = ({
       }
 
       button:hover {
-        background-color: #1d1d1d;
+        background-color: #000;
+        opacity: 0.9;
       }
 
       button:disabled {
@@ -46,6 +47,7 @@ const Controls = ({
 
       button:active {
         background-color: #060606;
+        opacity: 1;
       }
 
       .shuffle {
