@@ -21,6 +21,33 @@ const Layout = ({ children }) => {
           content="A simple app to browse your Spotify albums like you would browse a record crate."
         />
         <link rel="icon" href="/favicon.png" />
+        <meta
+          name="viewport"
+          content="initial-scale=1.0, width=device-width, user-scalable=no"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://albums.lal.fyi/" />
+        <meta property="og:title" content="Browse your albums" />
+        <meta
+          property="og:description"
+          content="Browse your Spotify albums like you would browse a record crate."
+        />
+        <meta
+          property="og:image"
+          content="https://albums.lal.fyi/social-share-image.png"
+        />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://albums.lal.fyi/" />
+        <meta property="twitter:title" content="Browse your albums" />
+        <meta
+          property="twitter:description"
+          content="Browse your Spotify albums like you would browse a record crate."
+        />
+        <meta
+          property="twitter:image"
+          content="https://albums.lal.fyi/social-share-image.png"
+        />
       </Head>
       {children}
       <style jsx>
