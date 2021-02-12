@@ -24,7 +24,12 @@ const Authorized = ({ origin }) => {
 
   return (
     <Layout>
-      <h1>Let's get you connected!</h1>
+      <p>Just a few seconds, getting you connected...</p>
+      <style jsx>{`
+        p {
+          font-size: 0.875em;
+        }
+      `}</style>
     </Layout>
   );
 };

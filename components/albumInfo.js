@@ -13,7 +13,7 @@ const Info = ({ artist, name, id }) => (
             display: flex;
             flex-direction: column;
             min-height: 6em;
-            margin-top: 60px;
+            margin-top: 20px;
             will-change: opacity;
           }
 

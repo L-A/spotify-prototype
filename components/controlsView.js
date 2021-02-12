@@ -17,8 +17,8 @@ const Controls = ({
       </button>
     </p>
     <style jsx>{`
-      .controls {
-        padding: 2vh;
+      p {
+        margin-bottom: 0;
       }
 
       button {

@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { playAlbum } from "../helpers/spotifyPlayAlbum";
 
 const rotationRange = 20;
 const initialOffset = 30;
+const offsetIncrement = -18;
 
 const AlbumView = ({
   covers,
@@ -12,15 +13,17 @@ const AlbumView = ({
   position,
   first,
   last,
-  fraction,
+  normalizedPosition,
 }) => {
   const play = () => playAlbum(uri);
 
   const [rotation] = useState(
     Math.random() * rotationRange - rotationRange / 2
   );
-  const xOffset = (position - 1) * -10;
-  const yOffset = (position - 1) * 5;
+  const lerpedOffset =
+    offsetIncrement * (position - 1) * (1 - normalizedPosition / 2);
+  const xOffset = lerpedOffset;
+  const yOffset = -xOffset / 2;
 
   return (
     <div className={"album-view " + (first ? "first" : last ? "last" : "")}>
@@ -93,7 +96,7 @@ const AlbumView = ({
           width: 100%;
           display: block;
           transition: width 0.3s ease-out;
-          opacity: ${1 - (position - 1) * fraction};
+          opacity: ${1 - normalizedPosition};
           transition: opacity 0.3s;
         }
 
@@ -125,13 +128,14 @@ const AlbumView = ({
 
         .first.enter {
           opacity: 0;
-          transform: translateX(${xOffset + initialOffset}px)
+          transform: translateX(${xOffset + initialOffset}px) scaleX(0)
             translateY(${yOffset + 10}px) rotate(${rotation * 2}deg);
         }
 
         .first.enter-active {
           opacity: 1;
-          transform: translateX(${xOffset}px) rotate(${rotation}deg);
+          transform: translateX(${xOffset}px) translateY(${yOffset}px)
+            rotate(${rotation}deg);
           transition: opacity 0.3s, transform 0.3s;
         }
 

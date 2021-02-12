@@ -1,10 +1,26 @@
 import Head from "next/head";
 
 const Layout = ({ children }) => {
+  if (typeof window !== "undefined") {
+    window.goatcounter = {
+      referrer: function () {
+        return null;
+      },
+      path: function () {
+        return "albums.lal.fyi";
+      },
+    };
+  }
+
   return (
     <div className="root">
       <Head>
-        <title>🔈 Pick an album</title>
+        <title>Browse your albums</title>
+        <meta
+          name="description"
+          content="A simple app to browse your Spotify albums like you would browse a record crate."
+        />
+        <link rel="icon" href="/favicon.png" />
       </Head>
       {children}
       <style jsx>
@@ -18,6 +34,7 @@ const Layout = ({ children }) => {
           :global(body, html, #__next) {
             height: 100%;
             margin: 0;
+            padding: 0;
           }
 
           :global(a) {
@@ -35,6 +52,11 @@ const Layout = ({ children }) => {
           }
         `}
       </style>
+      <script
+        data-goatcounter="https://lal.goatcounter.com/count"
+        async
+        src="https://gc.zgo.at/count.js"
+      ></script>
     </div>
   );
 };

@@ -5,6 +5,7 @@ type Action =
   | { type: "Set albums list"; albums: Album[] }
   | { type: "Select album forwards" }
   | { type: "Select album backwards" }
+  | { type: "Set app to need authorization" }
   | { type: "Set app to ready" };
 type Album = {
   name: string;
@@ -15,6 +16,7 @@ type Album = {
 };
 type State = {
   appReady: boolean;
+  needsAuth: boolean;
   albums: Album[];
   selections: string[];
   pickedIndex: number;
@@ -27,6 +29,7 @@ type ProviderProps = { children: ReactNode };
 
 const initialState: State = {
   appReady: false,
+  needsAuth: false,
   albums: [],
   selections: [],
   pickedAlbum: false,
@@ -47,7 +50,11 @@ const reducer = (state: State, action: Action) => {
     // This is a small app. When needed, logic is right in here:
 
     case "Set app to ready": {
-      return { ...state, appReady: true };
+      return { ...state, appReady: true, needsAuth: false };
+    }
+
+    case "Set app to need authorization": {
+      return { ...state, needsAuth: true };
     }
 
     case "Set albums list": {

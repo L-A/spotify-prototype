@@ -18,12 +18,12 @@ const Albums = () => {
         {filteredAlbums.map((album, i) => {
           const position = filteredAlbums.length - i;
           return (
-            <CSSTransition key={album.id} timeout={1000}>
+            <CSSTransition key={album.id} timeout={300}>
               <AlbumView
                 {...album}
                 first={position == 1}
                 last={position == filteredAlbums.length}
-                fraction={1 / numberOfAlbums}
+                normalizedPosition={1 - (i + 1) / filteredAlbums.length}
                 selected={pickedAlbum.id == album.id}
                 position={filteredAlbums.length - i}
               />
@@ -32,6 +32,11 @@ const Albums = () => {
         })}
       </TransitionGroup>
       <style jsx>{`
+        .albums-container {
+          padding-top: 1em;
+          margin-top: auto;
+        }
+
         .albums-container :global(.albums) {
           display: flex;
           flex-direction: row;
