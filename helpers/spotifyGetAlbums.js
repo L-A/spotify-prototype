@@ -1,21 +1,37 @@
 import { useToken } from "../helpers/spotifyTokens";
 
-export const getAllAlbums = async (offset = 0, albums = []) => {
-  const { items, next } = await getAlbumsAtOffset(offset);
-  if (next !== null) {
-    return await getAllAlbums(offset + 50, albums.concat(items));
-  } else {
-    const allAlbums = albums.concat(items).map(({ album }) => {
-      return {
-        name: album.name,
-        covers: album.images,
-        id: album.id,
-        artist: album.artists[0].name,
-        uri: album.uri,
-      };
+export const getAllAlbums = async (albums = []) => {
+  const { items, total } = await getAlbumsAtOffset();
+  let results = items;
+
+  if (total > 50) {
+    let currentPosition = 50;
+    let waitingRequests = [];
+
+    while (currentPosition <= total) {
+      waitingRequests.push(getAlbumsAtOffset(currentPosition));
+      currentPosition += 50;
+    }
+
+    const restOfItems = await Promise.all(waitingRequests);
+    console.log("Rest of items", restOfItems);
+
+    restOfItems.forEach(({ items }) => {
+      results = results.concat(items);
     });
-    return allAlbums;
   }
+
+  const allAlbums = results.map(({ album }) => {
+    return {
+      name: album.name,
+      covers: album.images,
+      id: album.id,
+      artist: album.artists[0].name,
+      uri: album.uri,
+    };
+  });
+
+  return allAlbums;
 };
 
 const getAlbumsAtOffset = async (offset = 0) => {
