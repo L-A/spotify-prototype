@@ -2,7 +2,15 @@ import { SwitchTransition, CSSTransition } from "react-transition-group";
 
 const transitionTime = 150;
 
-const Info = ({ artist, name, id }) => (
+const Info = ({
+  artist = "",
+  name = "",
+  id,
+}: {
+  artist?: String;
+  name?: String;
+  id?: String;
+}) => (
   <SwitchTransition>
     <CSSTransition key={id} timeout={150}>
       <div className="album-info">

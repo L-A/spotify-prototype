@@ -6,7 +6,8 @@ import AlbumView from "./albumView";
 const numberOfAlbums = 9;
 
 const Albums = () => {
-  const [{ selections, pickedIndex, pickedAlbum, albums }] = useAppState();
+  const [{ selections, pickedIndex, pickedAlbum, albums, playingAlbum }] =
+    useAppState();
   let filteredAlbums = selections
     .slice(0, pickedIndex + 1)
     .filter((_, i) => pickedIndex - i <= numberOfAlbums - 1 && i <= pickedIndex)
@@ -26,6 +27,7 @@ const Albums = () => {
                 normalizedPosition={1 - (i + 1) / filteredAlbums.length}
                 selected={pickedAlbum.id == album.id}
                 position={filteredAlbums.length - i}
+                playingAlbum={playingAlbum}
               />
             </CSSTransition>
           );

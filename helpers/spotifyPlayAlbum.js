@@ -1,7 +1,8 @@
 import { useToken } from "../helpers/spotifyTokens";
 import { getDevices } from "./spotifyDevices";
 
-export const playAlbum = async (uri) => {
+export const playAlbum = async (album) => {
+  const { uri } = album;
   let deviceId = undefined;
   const devices = await getDevices();
   const activePlayer = devices.find((x) => x.is_active);

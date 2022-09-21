@@ -16,3 +16,33 @@ export const getDevices = async () => {
   }
   return [];
 };
+
+export const getPlaybackState = async () => {
+  const getRequest = await fetch(
+    "https://api.spotify.com/v1/me/player/currently-playing",
+    {
+      headers: {
+        Authorization: await useToken(true),
+      },
+    }
+  );
+  try {
+    const {
+      is_playing,
+      item: { album },
+    } = await getRequest.json();
+
+    return {
+      playing: is_playing,
+      album: {
+        name: album.name,
+        covers: album.images,
+        id: album.id,
+        artist: album.artists[0].name,
+        uri: album.uri,
+      },
+    };
+  } catch (e) {
+    console.error(e);
+  }
+};

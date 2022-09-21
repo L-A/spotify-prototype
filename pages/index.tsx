@@ -4,6 +4,7 @@ import { StateProvider, useAppState } from "../helpers/state";
 import { getSpotifyAuthorizationUrl } from "../helpers/spotifyAuthorization";
 import { useToken } from "../helpers/spotifyTokens";
 import { getAllAlbums } from "../helpers/spotifyGetAlbums";
+import { getPlaybackState } from "../helpers/spotifyDevices";
 
 import Layout from "../components/layout";
 import Spinner from "../components/spinner";
@@ -23,6 +24,7 @@ const App = ({ spotifyAuthorizationUrl }) => {
     pickedIndex,
     lastPickedIndex,
   } = state;
+
   if (process && process.env.NODE_ENV == "development") {
     console.log("State update:", state);
   }
@@ -59,9 +61,26 @@ const App = ({ spotifyAuthorizationUrl }) => {
     dispatch({ type: "Select album backwards" });
   };
 
+  const updatePlayerState = () => {
+    const asyncGetPlayerState = async () => {
+      const playbackState = await getPlaybackState();
+      if (playbackState.playing) {
+        dispatch({ type: "Set device to playing" });
+        dispatch({ type: "Set device album", album: playbackState.album });
+      }
+    };
+    setTimeout(asyncGetPlayerState, 1000);
+  };
+
+  const setupPlayerUpdates = () => {
+    const interval = setInterval(updatePlayerState, 10 * 1000);
+    return () => clearInterval(interval);
+  };
+
   useEffect(checkToken, [appReady, needsAuth]);
   useEffect(initAlbums, [appReady]);
   useEffect(forwards, [albums]);
+  useEffect(setupPlayerUpdates, []);
 
   if (typeof Image !== "undefined" && nextPickedAlbum) {
     new Image().src = nextPickedAlbum.covers[1].url;

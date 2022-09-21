@@ -44,7 +44,7 @@ const Layout = ({ children }) => {
           }
 
           :global(body, html, #__next) {
-            height: 100%;
+            height: 100vh;
             margin: 0;
             padding: 0;
           }
@@ -60,7 +60,7 @@ const Layout = ({ children }) => {
             justify-content: center;
             text-align: center;
             font-family: sans-serif;
-            height: 100%;
+            height: 100vh;
           }
         `}
       </style>

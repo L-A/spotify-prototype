@@ -4,7 +4,7 @@ import { getDevices } from "../helpers/spotifyDevices";
 
 const Footer = () => {
   const [devices, setDevices] = useState([]);
-  const [{ appReady }] = useAppState();
+  const [{ appReady, devicePlaying, playingAlbum }] = useAppState();
 
   const updateDevices = () => {
     const updateDevicesAsync = async () => {
@@ -36,7 +36,11 @@ const Footer = () => {
           />{" "}
           {sleeping
             ? "Your Spotify devices are sleeping or turned off"
-            : "Controlling " + devices[0].name}
+            : `Device ${devices[0].name} ${
+                devicePlaying && playingAlbum
+                  ? `is playing ${playingAlbum.name} by ${playingAlbum.artist}`
+                  : "is paused"
+              }.`}
         </p>
       </div>
       <div className="rightmost-box">

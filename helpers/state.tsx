@@ -7,7 +7,10 @@ type Action =
   | { type: "Select album forwards" }
   | { type: "Select album backwards" }
   | { type: "Set app to need authorization" }
-  | { type: "Set app to ready" };
+  | { type: "Set app to ready" }
+  | { type: "Set device to playing" }
+  | { type: "Set device to not playing" }
+  | { type: "Set device album"; album: Album };
 type Album = {
   name: string;
   covers: object[];
@@ -24,6 +27,8 @@ type State = {
   lastPickedIndex: number;
   pickedAlbum: Album | false;
   nextPickedAlbum: Album | false;
+  devicePlaying: boolean;
+  playingAlbum: Album | undefined;
 };
 type Dispatch = (action: Action) => void;
 type ProviderProps = { children: ReactNode };
@@ -37,6 +42,8 @@ const initialState: State = {
   nextPickedAlbum: false,
   pickedIndex: -1,
   lastPickedIndex: -1,
+  devicePlaying: false,
+  playingAlbum: undefined,
 };
 
 const StateContext = createContext<State | undefined>(undefined);
@@ -104,6 +111,28 @@ const reducer = (state: State, action: Action) => {
         pickedIndex,
       };
     }
+
+    case "Set device to playing": {
+      return {
+        ...state,
+        devicePlaying: true,
+      };
+    }
+
+    case "Set device to not playing": {
+      return {
+        ...state,
+        devicePlaying: false,
+      };
+    }
+
+    case "Set device album": {
+      return {
+        ...state,
+        playingAlbum: action.album || undefined,
+      };
+    }
+
     default: {
       return { ...state };
     }
@@ -119,7 +148,7 @@ export const StateProvider = ({ children }: ProviderProps) => {
   );
 };
 
-export const useAppState = () => {
+export const useAppState = (): [State, Dispatch] => {
   const state = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
   if (state === undefined || dispatch === undefined) {

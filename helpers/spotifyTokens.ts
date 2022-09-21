@@ -15,7 +15,7 @@ export const validToken = () => {
   return expires_at && expires_at > new Date().getTime();
 };
 
-export const useToken = async (formatted: false) => {
+export const useToken = async (formatted?: false) => {
   const prefix = formatted ? formattedTokenPrefix : "";
   if (guardForServer()) return;
   const expires_at: number = getStoredItem("token_expiry");
