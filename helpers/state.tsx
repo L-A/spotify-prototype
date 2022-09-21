@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer, ReactNode } from "react";
+import Albums from "../components/albumsView";
 import { shuffleArray } from "../helpers/shuffleArray";
 
 // Types
@@ -68,12 +69,15 @@ const reducer = (state: State, action: Action) => {
       return {
         ...state,
         albums: action.albums,
-        selections: action.selectedAlbumId
-          ? [
-              action.selectedAlbumId,
-              ...shuffledAlbums.filter((id) => id !== action.selectedAlbumId),
-            ]
-          : shuffledAlbums,
+        selections:
+          action.selectedAlbumId &&
+          action.albums.find((a) => a.id == action.selectedAlbumId) !==
+            undefined
+            ? [
+                action.selectedAlbumId,
+                ...shuffledAlbums.filter((id) => id !== action.selectedAlbumId),
+              ]
+            : shuffledAlbums,
       };
     }
 
