@@ -17,6 +17,7 @@ const AlbumView = ({
 }) => {
   const [state, dispatch] = useAppState();
   const play = () => {
+    if (state.playingAlbum.id == album.id) return;
     playAlbum(album);
     dispatch({ type: "Set device album", album });
   };
@@ -97,16 +98,17 @@ const AlbumView = ({
           left: 0;
           background: #000;
           background-image: linear-gradient(
-            311deg,
-            rgba(0, 0, 0, 1) 0%,
-            rgba(25, 25, 25, 1) 50%,
-            rgba(0, 0, 0, 1) 100%
+            to bottom,
+            rgba(50, 50, 50, 1),
+            rgba(30, 30, 30, 1)
           );
-          border: solid 2px #191919;
+          border: solid 2px #333;
+          outline: solid 2px #000;
+          box-shadow: 0 0 24px rgba(0, 0, 0, 0.7);
           position: absolute;
           border-radius: 50%;
           z-index: -1;
-          transition: left 0.6s cubic-bezier(0.07, 1.37, 0.32, 0.955);
+          transition: left 1s cubic-bezier(0.07, 1.37, 0.32, 0.955);
           left: ${playing && selected ? "60px" : "5%"};
           animation: ${true ? "fake-turn 3s linear infinite" : "none"};
         }

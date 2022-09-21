@@ -3,7 +3,7 @@ import { shuffleArray } from "../helpers/shuffleArray";
 
 // Types
 type Action =
-  | { type: "Set albums list"; albums: Album[] }
+  | { type: "Set albums list"; albums: Album[]; selectedAlbumId?: string }
   | { type: "Select album forwards" }
   | { type: "Select album backwards" }
   | { type: "Set app to need authorization" }
@@ -13,7 +13,7 @@ type Action =
   | { type: "Set device album"; album: Album };
 type Album = {
   name: string;
-  covers: object[];
+  covers: { url: string }[];
   id: string;
   artist: string;
   uri: string;
@@ -64,8 +64,17 @@ const reducer = (state: State, action: Action) => {
 
     case "Set albums list": {
       const shuffledAlbums = shuffleArray(action.albums.map((a) => a.id));
-      console.log(shuffledAlbums);
-      return { ...state, albums: action.albums, selections: shuffledAlbums };
+
+      return {
+        ...state,
+        albums: action.albums,
+        selections: action.selectedAlbumId
+          ? [
+              action.selectedAlbumId,
+              ...shuffledAlbums.filter((id) => id !== action.selectedAlbumId),
+            ]
+          : shuffledAlbums,
+      };
     }
 
     case "Select album forwards": {

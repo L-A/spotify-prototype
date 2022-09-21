@@ -23,6 +23,7 @@ const App = ({ spotifyAuthorizationUrl }) => {
     nextPickedAlbum,
     pickedIndex,
     lastPickedIndex,
+    playingAlbum,
   } = state;
 
   if (process && process.env.NODE_ENV == "development") {
@@ -45,7 +46,10 @@ const App = ({ spotifyAuthorizationUrl }) => {
     if (!appReady) return;
     const asyncGetAlbums = async () => {
       const albums = await getAllAlbums();
-      dispatch({ type: "Set albums list", albums });
+      const playbackState = await getPlaybackState();
+      const selectedAlbumId = playbackState.album?.id;
+
+      dispatch({ type: "Set albums list", albums, selectedAlbumId });
     };
     if (albums.length == 0) {
       asyncGetAlbums();
@@ -64,7 +68,7 @@ const App = ({ spotifyAuthorizationUrl }) => {
   const updatePlayerState = () => {
     const asyncGetPlayerState = async () => {
       const playbackState = await getPlaybackState();
-      if (playbackState.playing) {
+      if (playbackState?.playing) {
         dispatch({ type: "Set device to playing" });
         dispatch({ type: "Set device album", album: playbackState.album });
       }
@@ -74,6 +78,7 @@ const App = ({ spotifyAuthorizationUrl }) => {
 
   const setupPlayerUpdates = () => {
     const interval = setInterval(updatePlayerState, 10 * 1000);
+    updatePlayerState();
     return () => clearInterval(interval);
   };
 
@@ -112,7 +117,7 @@ const App = ({ spotifyAuthorizationUrl }) => {
       ) : (
         <>
           <Albums />
-          <AlbumInfo {...pickedAlbum} />
+          <AlbumInfo {...pickedAlbum} playingAlbum={playingAlbum} />
           <ControlsView
             {...{ forwards, backwards }}
             backwardsDisabled={pickedIndex <= 0}
