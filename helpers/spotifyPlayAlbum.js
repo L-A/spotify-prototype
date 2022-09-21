@@ -13,7 +13,7 @@ export const playAlbum = async (album) => {
     "https://api.spotify.com/v1/me/player/play" +
     (deviceId ? `?device_id=${deviceId}` : "");
 
-  const playRequest = await fetch(queryUrl, {
+  fetch(queryUrl, {
     method: "PUT",
     headers: {
       Authorization: await useToken(true),
@@ -22,6 +22,4 @@ export const playAlbum = async (album) => {
       context_uri: uri,
     }),
   });
-
-  console.log(await playRequest.text());
 };

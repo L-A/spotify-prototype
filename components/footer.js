@@ -36,10 +36,10 @@ const Footer = () => {
           />{" "}
           {sleeping
             ? "Your Spotify devices are sleeping or turned off"
-            : `Device ${devices[0].name} ${
+            : `Current device is ${devices[0].name}, ${
                 devicePlaying && playingAlbum
-                  ? `is playing ${playingAlbum.name} by ${playingAlbum.artist}`
-                  : "is paused"
+                  ? `playing ${playingAlbum.name} by ${playingAlbum.artist}`
+                  : "it's paused"
               }.`}
         </p>
       </div>
