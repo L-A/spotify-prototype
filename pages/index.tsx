@@ -117,7 +117,7 @@ const App = ({ spotifyAuthorizationUrl }) => {
       ) : (
         <>
           <Albums />
-          <AlbumInfo {...pickedAlbum} playingAlbum={playingAlbum} />
+          <AlbumInfo {...pickedAlbum} />
           <ControlsView
             {...{ forwards, backwards }}
             backwardsDisabled={pickedIndex <= 0}
