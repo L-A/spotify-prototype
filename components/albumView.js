@@ -17,7 +17,7 @@ const AlbumView = ({
 }) => {
   const [state, dispatch] = useAppState();
   const play = () => {
-    if (state.playingAlbum.id == album.id) return;
+    if (state?.playingAlbum?.id == album.id) return;
     playAlbum(album);
     dispatch({ type: "Set device album", album });
   };
