@@ -34,13 +34,22 @@ const Footer = () => {
             height="24"
             className={devices.length == 0 ? "inactive" : null}
           />{" "}
-          {sleeping
-            ? "Your Spotify devices are sleeping or turned off"
-            : `Current device is ${devices[0].name}, ${
-                devicePlaying && playingAlbum
-                  ? `playing ${playingAlbum.name} by ${playingAlbum.artist}`
-                  : "it's paused"
-              }.`}
+          {sleeping ? (
+            "Your Spotify devices are sleeping or turned off"
+          ) : (
+            <>
+              Current device is {devices[0].name},{" "}
+              {devicePlaying && playingAlbum ? (
+                <>
+                  playing <em>{playingAlbum.name}</em> by{" "}
+                  <em>{playingAlbum.artist}</em>
+                </>
+              ) : (
+                " it's paused"
+              )}
+              .
+            </>
+          )}
         </p>
       </div>
       <div className="rightmost-box">

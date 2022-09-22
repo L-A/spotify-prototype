@@ -47,7 +47,7 @@ const App = ({ spotifyAuthorizationUrl }) => {
     const asyncGetAlbums = async () => {
       const albums = await getAllAlbums();
       const playbackState = await getPlaybackState();
-      const selectedAlbumId = playbackState.album?.id;
+      const selectedAlbumId = playbackState && playbackState.album?.id;
 
       dispatch({ type: "Set albums list", albums, selectedAlbumId });
     };

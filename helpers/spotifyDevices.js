@@ -18,19 +18,23 @@ export const getDevices = async () => {
 };
 
 export const getPlaybackState = async () => {
-  const getRequest = await fetch(
-    "https://api.spotify.com/v1/me/player/currently-playing",
-    {
-      headers: {
-        Authorization: await useToken(true),
-      },
-    }
-  );
   try {
+    const getRequest = await fetch(
+      "https://api.spotify.com/v1/me/player/currently-playing",
+      {
+        headers: {
+          Authorization: await useToken(true),
+        },
+      }
+    );
+
+    const playState = await getRequest.json();
+    console.log(getRequest);
+
     const {
       is_playing,
       item: { album },
-    } = await getRequest.json();
+    } = playState;
 
     return {
       playing: is_playing,
@@ -43,6 +47,12 @@ export const getPlaybackState = async () => {
       },
     };
   } catch (e) {
-    console.error(e);
+    if (process && process.env.NODE_ENV == "development") {
+      console.log("Didn't receive a player state", e);
+    }
+    return {
+      playing: false,
+      album: undefined,
+    };
   }
 };
