@@ -103,7 +103,6 @@ const AlbumView = ({
             rgba(30, 30, 30, 1)
           );
           border: solid 2px #333;
-          outline: solid 2px #000;
           box-shadow: 0 0 24px rgba(0, 0, 0, 0.7);
           position: absolute;
           border-radius: 50%;
